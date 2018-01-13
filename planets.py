@@ -18,7 +18,7 @@ WHITE = (255, 255, 255)
 SCREEN_WIDTH = 1500
 SCREEN_HEIGHT = 800
 planet_SIZE = 25
-SPEED=10000000000000000
+SPEED=20000000000000
 G_CONST=6.67408*10**-11
 
 print (G_CONST)
@@ -55,13 +55,13 @@ def calcVelVect(planetA, planetB):
         pass
     else:
         x=planetB.x-planetA.x
-        y=-planetB.y+planetA.y
+        y=planetB.y-planetA.y
         r2=((x**2)+(y**2))/2
         F=G_CONST/r2
         velX=(x/r2**0.5)*F*planetB.MASS
         velY=(y/r2**0.5)*F*planetB.MASS
-        planetA.velocityX=velX*SPEED
-        planetB.velocityY=velY*SPEED
+        planetA.velocityX+=velX*SPEED
+        planetA.velocityY+=velY*SPEED
     
     return (200,200)
 
@@ -90,17 +90,18 @@ def main():
  
     planet_list = []
     a=make_planet()
-    a.velocityX=10
-    a.velocityY=0
+    a.velocityX=5
+    a.velocityY=-5
     a.x=300
     a.y=300
     a.MASS=1
     planet_list.append(a)
-    a.x=700
-    a.y=700
-    a.MASS=1
-    a.velocityX=-10
-    planet_list.append(a)
+    b=make_planet()
+    b.x=700
+    b.y=500
+    b.MASS=10
+    b.velocityX=0
+    planet_list.append(b)
  
     # -------- Main Program Loop -----------
     while not done:
