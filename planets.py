@@ -18,6 +18,7 @@ WHITE = (255, 255, 255)
 SCREEN_WIDTH = 1500
 SCREEN_HEIGHT = 800
 planet_SIZE = 25
+SPEED=10000000000000000
 G_CONST=6.67408*10**-11
 
 print (G_CONST)
@@ -29,12 +30,13 @@ class Planet:
     def __init__(self):
         self.x = 0.0
         self.y = 0.0
-        self.change_x = 0.0
-        self.change_y = 0.0
+        self.velocityX=0.0
+        self.velocityY=-0.0
+        
         self.radius=0
-        self.mass=0
+        self.MASS=0
  
-def make_Planet():
+def make_planet():
     """
     Function to make a new, random planet.
     """
@@ -45,15 +47,29 @@ def make_Planet():
     planet.x = random.randrange(planet.radius, SCREEN_WIDTH - planet.radius)
     planet.y = random.randrange(planet.radius, SCREEN_HEIGHT -planet.radius)
    
-    # Speed and direction of rectangle
-    planet.change_x = random.randrange(-5.0, 5.0)
-    planet.change_y = random.randrange(-5.0, 5.0)
  
     return planet
  
-def calcPos(planet):
+def calcVelVect(planetA, planetB):
+    if planetA==planetB:
+        pass
+    else:
+        x=planetB.x-planetA.x
+        y=-planetB.y+planetA.y
+        r2=((x**2)+(y**2))/2
+        F=G_CONST/r2
+        velX=(x/r2**0.5)*F*planetB.MASS
+        velY=(y/r2**0.5)*F*planetB.MASS
+        planetA.velocityX=velX*SPEED
+        planetB.velocityY=velY*SPEED
     
     return (200,200)
+
+
+
+
+
+
 def main():
     """
     This is our main program.
@@ -73,9 +89,18 @@ def main():
     clock = pygame.time.Clock()
  
     planet_list = []
- 
-    planet = make_planet()
-    planet_list.append(planet)
+    a=make_planet()
+    a.velocityX=10
+    a.velocityY=0
+    a.x=300
+    a.y=300
+    a.MASS=1
+    planet_list.append(a)
+    a.x=700
+    a.y=700
+    a.MASS=1
+    a.velocityX=-10
+    planet_list.append(a)
  
     # -------- Main Program Loop -----------
     while not done:
@@ -90,20 +115,17 @@ def main():
                     planet_list.append(planet)
  
         # --- Logic
-        for planet in planet_list:
+        for planetA in planet_list:
+            for planetB in planet_list:
+                calcVelVect(planetA,planetB)
             # Move the planet's center
-            xy=calcPos(planet)
-            planet.x =xy[0]
-            planet.y =xy[1]
+           
+            planetA.x += planetA.velocityX
+            planetA.y += planetA.velocityY
             #planet.change_x+=0.1;
           
  
-            # Bounce the planet if needed
-            if planet.y > SCREEN_HEIGHT - planet.radius or planet.y < planet.radius:
-                planet.change_y *= -1.0
-            if planet.x > SCREEN_WIDTH - planet.radius or planet.x < planet.radius:
-                planet.change_x *= -1.0
- 
+            
         # --- Drawing
         # Set the screen background
         screen.fill(BLACK)
