@@ -18,7 +18,6 @@ WHITE = (255, 255, 255)
 SCREEN_WIDTH = 1500
 SCREEN_HEIGHT = 800
 planet_SIZE = 25
-SPEED=20000000000000
 G_CONST=6.67408*10**-11
 
 print (G_CONST)
@@ -31,12 +30,12 @@ class Planet:
         self.x = 0.0
         self.y = 0.0
         self.velocityX=0.0
-        self.velocityY=-0.0
+        self.velocityY=0.0
         
         self.radius=0
         self.MASS=0
  
-def make_planet():
+def make_Planet():
     """
     Function to make a new, random planet.
     """
@@ -47,29 +46,18 @@ def make_planet():
     planet.x = random.randrange(planet.radius, SCREEN_WIDTH - planet.radius)
     planet.y = random.randrange(planet.radius, SCREEN_HEIGHT -planet.radius)
    
+    # Speed and direction of rectangle
+    planet.change_x = random.randrange(-5.0, 5.0)
+    planet.change_y = random.randrange(-5.0, 5.0)
  
     return planet
  
 def calcVelVect(planetA, planetB):
-    if planetA==planetB:
-        pass
-    else:
-        x=planetB.x-planetA.x
-        y=planetB.y-planetA.y
-        r2=((x**2)+(y**2))/2
-        F=G_CONST/r2
-        velX=(x/r2**0.5)*F*planetB.MASS
-        velY=(y/r2**0.5)*F*planetB.MASS
-        planetA.velocityX+=velX*SPEED
-        planetA.velocityY+=velY*SPEED
+    r2=((planetA.x-planetB.x)**2)+((planetA.y-planetB.y)**2)
+    M=planetA.MASS-planetB.MASS
+    print(G_CONST)
     
     return (200,200)
-
-
-
-
-
-
 def main():
     """
     This is our main program.
@@ -89,19 +77,8 @@ def main():
     clock = pygame.time.Clock()
  
     planet_list = []
-    a=make_planet()
-    a.velocityX=5
-    a.velocityY=-5
-    a.x=300
-    a.y=300
-    a.MASS=1
-    planet_list.append(a)
-    b=make_planet()
-    b.x=700
-    b.y=500
-    b.MASS=10
-    b.velocityX=0
-    planet_list.append(b)
+ 
+    planet_list.append(make_planet(), make_planet())
  
     # -------- Main Program Loop -----------
     while not done:
@@ -126,7 +103,12 @@ def main():
             #planet.change_x+=0.1;
           
  
-            
+            # Bounce the planet if needed
+            if planet.y > SCREEN_HEIGHT - planet.radius or planet.y < planet.radius:
+                planet.change_y *= -1.0
+            if planet.x > SCREEN_WIDTH - planet.radius or planet.x < planet.radius:
+                planet.change_x *= -1.0
+ 
         # --- Drawing
         # Set the screen background
         screen.fill(BLACK)
