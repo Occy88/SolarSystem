@@ -1,3 +1,9 @@
+import planets
+from bs4 import BeautifulSoup
+import re
+import requests
+from selenium import webdriver
+
 
 class Planet:
     """
@@ -17,15 +23,6 @@ class Planet:
                str(round(self.radius, 2))+' & velocity: ('+\
                str(round(self.velocityX, 7))+', '+\
                str(round(self.velocityY, 7))+')'
-
-
-
-import requests
-from bs4 import BeautifulSoup
-import re
-import planets
-from selenium import webdriver
-
 
 def create_planet_list(download=True):
     planet_list=[]
@@ -52,15 +49,16 @@ def create_planet_list(download=True):
 
     match=matches[0]
 
-    sun=planets.Planet()
-    sun.x=float(re.findall(r"[0-9.]+", re.findall(r"left: [0-9.]*px", match)[0])[0])
-    sun.y=float(re.findall(r"[0-9.]+", re.findall(r"top: [0-9.]*px", match)[0])[0])
+    sun=Planet()
+    sun.radius=10
+    sun.x=float(re.findall(r"[0-9.]+", re.findall(r"left: [0-9.]*px", match)[0])[0])*1.2+100
+    sun.y=float(re.findall(r"[0-9.]+", re.findall(r"top: [0-9.]*px", match)[0])[0])*1.2
     a="http://www.theplanetstoday.com/" + \
        re.findall(r"\"images.{15,50}\" ", match)[0][1:-2]
     file='img'+re.findall(r"/[^/]*$", a)[0]
-    download_photo(a, file)
+    #download_photo(a, file)
     sun.file=file
-    sun.MASS=10**35
+    sun.MASS=10**35.5
 
     planet_list.append(sun)
 
@@ -70,10 +68,10 @@ def create_planet_list(download=True):
            re.findall(r"\"images.{15,50}\" ", match)[0][1:-2]
         file='img'+re.findall(r"/[^/]*$", a)[0]
         #print(a, file)
-        download_photo(a, file)
+        #download_photo(a, file)
 
-        y=re.findall(r"[0-9.]+", re.findall(r"top: [0-9.]*px", match)[0])[0]
-        x=re.findall(r"[0-9.]+", re.findall(r"left: [0-9.]*px", match)[0])[0]
+        y=float(re.findall(r"[0-9.]+", re.findall(r"top: [0-9.]*px", match)[0])[0])*1.2
+        x=float(re.findall(r"[0-9.]+", re.findall(r"left: [0-9.]*px", match)[0])[0])*1.2+100
         r=re.findall(r"[0-9.]+", re.findall(r"width: [0-9.]*px", match)[0])[0]
 
         planet_list.append(createPlanet(x, y, r, file, sun))
@@ -100,18 +98,18 @@ def download_photo(img_url, filename):
 
 
 def createPlanet(x, y, radius, file, sun):
-    a=planets.Planet()
-    a.x=float(x)*3+100
-    a.y=float(x)*2.25+75
+    a=Planet()
+    a.x=float(x)
+    a.y=float(y)
     a.file=file
-    a.radius=float(radius)
+    a.radius=float(radius)**0.5
     a.MASS=float(radius)*10**12
     #create inital velocity that make sense
     x=(a.x-sun.x)
     y=(a.y-sun.y)
     r2=x**2+y**2
-    a.velocityX=-(y/r2)*sun.MASS*planets.G_CONST*10**-27
-    a.velocityY=(x/r2)*sun.MASS*planets.G_CONST*10**-27
+    a.velocityX=-(y/r2)*sun.MASS*planets.G_CONST*2.2*10**-28
+    a.velocityY=(x/r2)*sun.MASS*planets.G_CONST*2.2*10**-28
     return a
 
 
