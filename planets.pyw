@@ -1,15 +1,10 @@
 """
- This example shows having multiple planets bouncing around the screen at the
- same time. You can hit the space bar to spawn more planets.
- 
- Sample Python/Pygame Programs
- Simpson College Computer Science
- http://programarcadegames.com/
- http://simpson.edu/computer-science/
+ This game was made for Royal Hackaway
+
+ Build with <3 by Octavio, Sorin, & Paul
 """
 import scrapPlanetPositions as scrap
 import pygame
-import random
 import math
 import sys
 from pygame.locals import *
@@ -27,21 +22,7 @@ G_CONST=6.67408*10**-11
 
 
 
- 
-def make_planet():
-    """
-    Function to make a new, random planet.
-    """
-    planet = Planet()
-    # Starting position of the planet. 
-    planet.radius=random.randrange(5,7)
-    # Take into account the planet size so we don't spawn on the edge.
-    planet.x = random.randrange(planet.radius, SCREEN_WIDTH - planet.radius)
-    planet.y = random.randrange(planet.radius, SCREEN_HEIGHT -planet.radius)
-   
- 
-    return planet
- 
+
 def calcVelVect(planetA, planetB):
     if planetA==planetB or planetA.x-planetB.x==0 or planetB.y-planetA.y==0:
         pass
