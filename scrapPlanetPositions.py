@@ -40,17 +40,27 @@ def create_planet_list():
         
     
     if download:
-        url = 'http://www.theplanetstoday.com/#'
-        browser = webdriver.Firefox()
-        browser.get(url)
-        app = browser.find_element_by_id("JavaApp") 
-        html_doc=browser.page_source
-        browser.close()
-        f=open('page.txt', 'w')
-        f.write(str(int(time.time())))
-        f.write('\n'+html_doc)
-        f.close()
+        try:
+                
+            url = 'http://www.theplanetstoday.com/#'
+            browser = webdriver.Firefox()
+            browser.get(url)
+            app = browser.find_element_by_id("JavaApp") 
+            html_doc=browser.page_source
+            browser.close()
+            f=open('page.txt', 'w')
+            f.write(str(int(time.time())))
+            f.write('\n'+html_doc)
+            f.close()
+
+        except:
+            f=open('page.txt', 'r')
+            html_doc=f.read()
+            f.close()
+    
+            
     else:
+        
         f=open('page.txt', 'r')
         html_doc=f.read()
         f.close()
