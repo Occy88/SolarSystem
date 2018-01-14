@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import re
 import requests
 from selenium import webdriver
-
+import time
 
 class Planet:
     """
@@ -24,9 +24,21 @@ class Planet:
                str(round(self.velocityX, 7))+', '+\
                str(round(self.velocityY, 7))+')'
 
-def create_planet_list(download=True):
+def create_planet_list():
     planet_list=[]
-
+    try:
+        f=open('page.txt', 'r')
+    except:
+        download=True
+    else:
+        t=int(f.readline()[:-1])
+        if (time.time()-t)/(60*60*24)>1:
+            download=True
+        else:
+            download=False
+        f.close()
+        
+    
     if download:
         url = 'http://www.theplanetstoday.com/#'
         browser = webdriver.Firefox()
@@ -34,6 +46,10 @@ def create_planet_list(download=True):
         app = browser.find_element_by_id("JavaApp") 
         html_doc=browser.page_source
         browser.close()
+        f=open('page.txt', 'w')
+        f.write(str(int(time.time())))
+        f.write('\n'+html_doc)
+        f.close()
     else:
         f=open('page.txt', 'r')
         html_doc=f.read()
@@ -115,7 +131,7 @@ def createPlanet(x, y, radius, file, sun):
 
 
 if __name__=='__main__':
-    l=create_planet_list(False)
+    l=create_planet_list()
     for i in l:
         print(i)
 
