@@ -11,6 +11,7 @@ import scrapPlanetPositions as scrap
 import pygame
 import random
 import math
+import sys
 from pygame.locals import *
 # Define some colors
 BLACK = (0, 0, 0)
@@ -147,13 +148,14 @@ def main():
         done=False
         while not done:
             for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                elif event.type == pygame.KEYDOWN:
+                if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_SPACE:
                         done=1
                     else:
                         done=2
+                elif event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
         if done==1:
             # Fill background
             background = pygame.Surface(screen.get_size())
@@ -187,6 +189,7 @@ def main():
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
+                        sys.exit()
                     elif event.type == pygame.KEYDOWN:
                         done=True
 
@@ -199,7 +202,7 @@ def main():
             # Used to manage how fast the screen updates
             clock = pygame.time.Clock()
          
-            planet_list = scrap.create_planet_list(False)
+            planet_list = scrap.create_planet_list()
             for planet in planet_list:
                 planet.image=pygame.transform.scale(pygame.image.load(planet.file), (int(planet.radius*4), int(planet.radius*4)))
 
@@ -232,6 +235,7 @@ def main():
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
+                        sys.exit()
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_UP:
                             #ship.velocityTotal = calcVel(ship.velocityX,ship.velocityY)+5
@@ -423,15 +427,15 @@ def main():
             done=False
             while not done:
                 for event in pygame.event.get():
-                    if event.type == pygame.QUIT:
+                    if event.key == pygame.K_RETURN:
+                        done=True
+                    elif event.type == pygame.QUIT:
                         pygame.quit()
-                    elif event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_RETURN:
-                            done=True
+                        sys.exit()
 
-         
-    # Close everything down
-    pygame.quit()
+
+
+
      
 if __name__ == "__main__":
     main()
